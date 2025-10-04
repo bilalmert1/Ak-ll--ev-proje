@@ -1,64 +1,64 @@
 #include <DHT11.h>
 #include <LCD-I2C.h>
 
-const int esikDegeri = 200;   // Gaz eşik değerini belirliyoruz.
-const int buzzerPin = 9;      // Buzzer'ın takılacağı pin
-const int ledPin = 13;        // LED'in bağlı olduğu pin numarasını belirtin
-const int ledPin2 = 8;        // İkinci LED'in bağlı olduğu pin numarasını belirtin
-const int ledPin3 = 7;        // Üçüncü LED'in bağlı olduğu pin numarasını belirtin
-const int pirSensorPin = 10;  // Hareket sensörünün sinyal çıkış pinini belirtin
-const int dht11Pin = 2;       // DHT11 sensörünün bağlı olduğu pin
+const int esikDegeri = 200;  
+const int buzzerPin = 9;      
+const int ledPin = 13;        
+const int ledPin2 = 8;        
+const int ledPin3 = 7;        
+const int pirSensorPin = 10;  
+const int dht11Pin = 2;       
 
-int deger;                     // Gaz sensöründen okunan değer
+int deger;                    
 
-bool motionDetected = false;   // Hareket algılandı mı?
-unsigned long motionStartTime = 0;  // Hareketin başlangıç zamanını kaydet
-const unsigned long motionDuration = 3000;  // Hareketin algılanma süresi (ms)
-const unsigned long ledOnDuration = 3000;   // LED'in yanma süresi (ms)
+bool motionDetected = false;   
+unsigned long motionStartTime = 0; 
+const unsigned long motionDuration = 3000;  
+const unsigned long ledOnDuration = 3000;  
 
 DHT11 dht11(dht11Pin);
-LCD_I2C lcd(0x27, 16, 2);  // Default address of most PCF8574 modules, change according
+LCD_I2C lcd(0x27, 16, 2); 
 
 void setup() {
-  pinMode(buzzerPin, OUTPUT); // Buzzer pinimizi çıkış olarak ayarlıyoruz.
-  pinMode(ledPin, OUTPUT);    // Birinci LED pinini çıkış olarak ayarla
-  pinMode(ledPin2, OUTPUT);   // İkinci LED pinini çıkış olarak ayarla
-  pinMode(ledPin3, OUTPUT);   // Üçüncü LED pinini çıkış olarak ayarla
-  pinMode(pirSensorPin, INPUT); // Hareket sensörü pinini giriş olarak ayarla
+  pinMode(buzzerPin, OUTPUT);
+  pinMode(ledPin, OUTPUT);    
+  pinMode(ledPin2, OUTPUT);  
+  pinMode(ledPin3, OUTPUT);   
+  pinMode(pirSensorPin, INPUT);
   lcd.begin();
   lcd.display();
   lcd.backlight();
-  Serial.begin(9600); // Seri Port başlat
+  Serial.begin(9600);
 }
 
 void loop() {
-  // Gaz sensörü kodu
-  deger = analogRead(A0); // Sensörden analog değer okuyoruz.
-  if (deger > esikDegeri) { // Sensörden okunan değer eşik değerinden büyükse çalışır.
-    tone(buzzerPin, 1000);  // Buzzer frekansını 1000 Hz olarak ayarla
+  
+  deger = analogRead(A0); 
+  if (deger > esikDegeri) { 
+    tone(buzzerPin, 1000);  
     delay(100);
-    noTone(buzzerPin);      // Buzzer'ı kapat
+    noTone(buzzerPin);      
     delay(100);
 
-    // İlk LED'i yak
+    
     digitalWrite(ledPin, HIGH);
     delay(1000);
     digitalWrite(ledPin, LOW);
 
-    // İkinci LED'i yak
+    
     digitalWrite(ledPin2, HIGH);
     delay(1000);
     digitalWrite(ledPin2, LOW);
 
-    // Üçüncü LED'i yak
+    
     digitalWrite(ledPin3, HIGH);
     delay(1000);
     digitalWrite(ledPin3, LOW);
-  } else { // Sensörden okunan değer eşik değerinin altındaysa çalışır.
-    noTone(buzzerPin); // Buzzer'ı kapat
+  } else { 
+    noTone(buzzerPin);
   }
 
-  // Hareket sensörü kodu
+ 
   int motionSensorValue = digitalRead(pirSensorPin);
   if (motionSensorValue == HIGH && !motionDetected) {
     digitalWrite(ledPin, HIGH);
@@ -80,7 +80,7 @@ void loop() {
 
   delay(100);
 
-  // DHT11 sensörü kodu
+
   int temperature = dht11.readTemperature();
   int humidity = dht11.readHumidity();
 
